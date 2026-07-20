@@ -1,0 +1,2458 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>금지명령(Injunction) 자기이해 검사</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f4ef;
+    --paper: #fffdf9;
+    --ink: #1a1714;
+    --ink-light: #5a5450;
+    --ink-muted: #9a9390;
+    --accent: #7b5c3e;
+    --accent-light: #c4a882;
+    --accent-pale: #ede5d8;
+    --warn: #b85c38;
+    --border: #ddd5c8;
+    --section-A: #eef2eb;
+    --section-A-accent: #5a7a4a;
+    --section-B: #eaf0f5;
+    --section-B-accent: #3a6a8a;
+    --section-C: #f5eef0;
+    --section-C-accent: #8a3a5a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ── COVER ── */
+  .cover {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--ink);
+    color: var(--bg);
+    padding: 60px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cover::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 30% 20%, rgba(196,168,130,0.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 80%, rgba(123,92,62,0.2) 0%, transparent 50%);
+  }
+
+  .cover-ornament {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 11px;
+    letter-spacing: 0.4em;
+    color: var(--accent-light);
+    text-transform: uppercase;
+    margin-bottom: 40px;
+    position: relative;
+  }
+
+  .cover-ornament::before,
+  .cover-ornament::after {
+    content: '— ';
+  }
+  .cover-ornament::after {
+    content: ' —';
+  }
+
+  .cover h1 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 8px;
+    position: relative;
+  }
+
+  .cover h1 em {
+    display: block;
+    font-style: normal;
+    font-size: 0.55em;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    color: var(--accent-light);
+    margin-bottom: 12px;
+  }
+
+  .cover-sub {
+    font-size: 13px;
+    color: rgba(247,244,239,0.6);
+    margin-top: 20px;
+    line-height: 1.8;
+    position: relative;
+  }
+
+  .cover-divider {
+    width: 60px;
+    height: 1px;
+    background: var(--accent-light);
+    margin: 32px auto;
+    position: relative;
+  }
+
+  .cover-start {
+    margin-top: 48px;
+    display: inline-block;
+    padding: 14px 36px;
+    border: 1px solid var(--accent-light);
+    color: var(--accent-light);
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    cursor: pointer;
+    background: transparent;
+    transition: all 0.3s;
+    position: relative;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+
+  .cover-start:hover {
+    background: var(--accent-light);
+    color: var(--ink);
+  }
+
+  /* ── PAGES ── */
+  .page {
+    display: none;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+    animation: fadeIn 0.4s ease;
+  }
+
+  .page.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── PROGRESS ── */
+  .progress-bar-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg);
+    padding: 12px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 11px;
+    color: var(--ink-muted);
+    letter-spacing: 0.05em;
+  }
+
+  .progress-track {
+    flex: 1;
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.5s ease;
+  }
+
+  /* ── SECTION HEADER ── */
+  .section-header {
+    margin-bottom: 32px;
+  }
+
+  .section-tag {
+    display: inline-block;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 2px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+
+  .tag-A { background: var(--section-A); color: var(--section-A-accent); }
+  .tag-B { background: var(--section-B); color: var(--section-B-accent); }
+  .tag-C { background: var(--section-C); color: var(--section-C-accent); }
+  .tag-neutral { background: var(--accent-pale); color: var(--accent); }
+
+  .section-header h2 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(20px, 3vw, 28px);
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 8px;
+  }
+
+  .section-header p {
+    font-size: 13px;
+    color: var(--ink-light);
+    line-height: 1.8;
+  }
+
+  /* ── INSTRUCTIONS BOX ── */
+  .instr-box {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    padding: 20px 24px;
+    margin-bottom: 28px;
+    font-size: 13px;
+    line-height: 1.85;
+    color: var(--ink-light);
+  }
+
+  .instr-box strong { color: var(--ink); }
+
+  .scale-guide {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    margin-top: 16px;
+    text-align: center;
+  }
+
+  .scale-guide-item {
+    padding: 8px 4px;
+    background: var(--accent-pale);
+    border-radius: 4px;
+    font-size: 11px;
+    line-height: 1.4;
+  }
+
+  .scale-guide-item strong {
+    display: block;
+    font-size: 16px;
+    color: var(--accent);
+    font-family: 'Noto Serif KR', serif;
+  }
+
+  /* ── INJUNCTION CARD ── */
+  .inj-card {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    margin-bottom: 28px;
+    overflow: hidden;
+  }
+
+  .inj-card-header {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+  }
+
+  .inj-number {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .inj-title-wrap { flex: 1; }
+
+  .inj-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .inj-title-en {
+    font-size: 11px;
+    color: var(--ink-muted);
+    letter-spacing: 0.05em;
+  }
+
+  .inj-score-badge {
+    font-size: 11px;
+    color: var(--ink-muted);
+    background: var(--accent-pale);
+    padding: 3px 8px;
+    border-radius: 10px;
+    white-space: nowrap;
+  }
+
+  /* ── SUB-SECTION LABEL ── */
+  .sub-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 8px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sub-label-exp {
+    background: var(--section-A);
+    color: var(--section-A-accent);
+  }
+
+  .sub-label-dec {
+    background: var(--section-B);
+    color: var(--section-B-accent);
+  }
+
+  /* ── QUESTION ROW ── */
+  .q-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    gap: 12px;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--bg);
+    transition: background 0.15s;
+  }
+
+  .q-row:hover { background: var(--accent-pale); }
+  .q-row:last-child { border-bottom: none; }
+
+  .q-text {
+    font-size: 13.5px;
+    line-height: 1.7;
+    padding-top: 2px;
+  }
+
+  .q-scale {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .q-scale label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    cursor: pointer;
+  }
+
+  .q-scale input[type=radio] { display: none; }
+
+  .q-scale .dot {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    background: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: var(--ink-muted);
+    transition: all 0.15s;
+    font-family: 'Noto Serif KR', serif;
+  }
+
+  .q-scale input[type=radio]:checked + .dot {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--bg);
+  }
+
+  .q-scale label:hover .dot {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .q-scale input[type=radio]:checked + .dot {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--bg);
+    transform: scale(1.1);
+  }
+
+  /* ── VALIDATION WARNING ── */
+  .val-warn {
+    display: none;
+    font-size: 11px;
+    color: var(--warn);
+    padding: 6px 20px;
+    background: #fff5f2;
+    border-top: 1px solid #f0d0c8;
+  }
+
+  /* ── NAVIGATION ── */
+  .nav-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 40px;
+    gap: 12px;
+  }
+
+  .btn {
+    padding: 12px 28px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 13px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+  }
+
+  .btn-primary {
+    background: var(--ink);
+    color: var(--bg);
+  }
+
+  .btn-primary:hover { background: var(--accent); }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--ink-light);
+    border: 1px solid var(--border);
+  }
+
+  .btn-secondary:hover { border-color: var(--ink); color: var(--ink); }
+
+  /* ── SIGNAL CHECKLIST (몸이 보내는 신호) ── */
+  .signal-group {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    margin-bottom: 20px;
+    padding: 18px 20px 20px;
+  }
+
+  .signal-group-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .signal-group-hint {
+    font-size: 12px;
+    color: var(--ink-muted);
+    margin-bottom: 14px;
+  }
+
+  .signal-chip-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .signal-chip {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .signal-chip input[type=checkbox] { display: none; }
+
+  .signal-chip span {
+    padding: 7px 14px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 12.5px;
+    color: var(--ink-light);
+    background: var(--bg);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .signal-chip input[type=checkbox]:checked + span {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--bg);
+  }
+
+  .signal-result-chip {
+    display: inline-block;
+    padding: 5px 12px;
+    margin: 0 6px 6px 0;
+    border-radius: 20px;
+    background: var(--accent-pale);
+    color: var(--accent);
+    font-size: 12px;
+  }
+
+  /* ── COMPOUND DECISION (복합결정) ── */
+  .compound-box {
+    margin-top: 10px;
+    padding: 10px 14px;
+    background: rgba(247,244,239,0.08);
+    border-left: 2px solid var(--accent-light);
+    font-size: 12.5px;
+    line-height: 1.7;
+    color: rgba(247,244,239,0.85);
+  }
+
+  .compound-label {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--accent-light);
+    text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+
+  .trigger-box {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent);
+    padding: 22px 24px;
+    margin-bottom: 28px;
+  }
+
+  .trigger-box h3 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+
+  .trigger-box p {
+    font-size: 13px;
+    color: var(--ink-light);
+    line-height: 1.8;
+    margin-bottom: 14px;
+  }
+
+  /* ── REFLECTIVE SECTION ── */
+  .refl-group {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+
+  .refl-q-num {
+    background: var(--ink);
+    color: var(--bg);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-family: 'Noto Serif KR', serif;
+    margin-right: 10px;
+    flex-shrink: 0;
+  }
+
+  .refl-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+  }
+
+  .refl-question {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+
+  .refl-hint {
+    font-size: 12px;
+    color: var(--ink-muted);
+    margin-top: 4px;
+  }
+
+  .refl-body {
+    padding: 16px 20px;
+  }
+
+  .refl-field {
+    width: 100%;
+    min-height: 80px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    padding: 12px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--ink);
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .refl-field:focus { border-color: var(--accent); }
+
+  .refl-field-sm { min-height: 52px; }
+
+  .scene-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .scene-item label {
+    display: block;
+    font-size: 11px;
+    color: var(--ink-muted);
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+
+  /* ── PERMISSION SECTION ── */
+  .permission-intro {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent);
+    padding: 24px;
+    margin-bottom: 24px;
+    font-size: 13.5px;
+    line-height: 1.85;
+  }
+
+  .permission-intro h3 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 17px;
+    margin-bottom: 12px;
+  }
+
+  .permission-example {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .perm-chip {
+    background: var(--accent-pale);
+    border: 1px solid var(--border);
+    padding: 5px 12px;
+    font-size: 12px;
+    border-radius: 20px;
+    color: var(--accent);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .perm-chip:hover { background: var(--accent); color: white; }
+
+  .permission-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .permission-row {
+    display: grid;
+    grid-template-columns: 24px 1fr;
+    align-items: start;
+    gap: 12px;
+    background: var(--paper);
+    border: 1px solid var(--border);
+    padding: 14px 16px;
+  }
+
+  .permission-num {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 14px;
+    color: var(--accent-light);
+    padding-top: 10px;
+  }
+
+  .permission-input {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    background: transparent;
+    padding: 10px 0;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    outline: none;
+  }
+
+  .permission-input:focus { border-bottom-color: var(--accent); }
+
+  .permission-input::placeholder { color: var(--ink-muted); }
+
+  /* ── RESULT ── */
+  #page-result { display: none; }
+  #page-result.active { display: block; }
+
+  .result-header {
+    text-align: center;
+    padding: 40px 20px 32px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 32px;
+  }
+
+  .result-header h2 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 26px;
+    margin-bottom: 8px;
+  }
+
+  .result-header p { color: var(--ink-light); font-size: 13px; }
+
+  .result-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 32px;
+  }
+
+  @media (max-width: 500px) {
+    .result-grid { grid-template-columns: 1fr; }
+    .scene-grid { grid-template-columns: 1fr; }
+    .q-scale .dot { width: 22px; height: 22px; font-size: 10px; }
+  }
+
+  .result-item {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .result-item.highlight {
+    border-color: var(--accent);
+    background: var(--accent-pale);
+  }
+
+  .result-rank {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 12px;
+    color: var(--ink-muted);
+    width: 20px;
+    flex-shrink: 0;
+  }
+
+  .result-name {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .result-bar-wrap {
+    width: 80px;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .result-bar-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 3px;
+    transition: width 0.8s ease;
+  }
+
+  .result-item.highlight .result-bar-fill { background: var(--ink); }
+
+  .result-score {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent);
+    width: 36px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .result-item.highlight .result-score { color: var(--ink); }
+
+  /* ── SUMMARY BOX ── */
+  .summary-box {
+    background: var(--ink);
+    color: var(--bg);
+    padding: 28px 24px;
+    margin-bottom: 28px;
+  }
+
+  .summary-box h3 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 18px;
+    margin-bottom: 16px;
+    color: var(--accent-light);
+  }
+
+  .summary-top-items {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .summary-top-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .summary-top-item:last-child { border-bottom: none; }
+
+  .summary-rank-badge {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: var(--accent-light);
+    flex-shrink: 0;
+  }
+
+  .summary-name { flex: 1; font-size: 14px; }
+
+  .summary-meaning {
+    font-size: 12px;
+    color: rgba(247,244,239,0.6);
+    margin-top: 3px;
+    line-height: 1.5;
+  }
+
+  .summary-score {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--accent-light);
+  }
+
+  .summary-max { font-size: 11px; color: rgba(247,244,239,0.4); }
+
+  /* ── REFLECTION RESULT ── */
+  .refl-result-box {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+
+  .refl-result-box h4 {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .refl-result-box p {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--ink);
+  }
+
+  .perm-result-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .perm-result-item {
+    background: var(--accent-pale);
+    border-left: 3px solid var(--accent);
+    padding: 10px 16px;
+    font-size: 14px;
+    font-family: 'Noto Serif KR', serif;
+  }
+
+  /* ── PRINT BTN ── */
+  .print-note {
+    text-align: center;
+    font-size: 12px;
+    color: var(--ink-muted);
+    margin-top: 12px;
+  }
+
+  /* ── PERMISSION SUGGESTION ── */
+  .perm-inj-block {
+    margin-bottom: 12px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .perm-inj-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: var(--paper);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .perm-inj-rank {
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: white;
+    background: var(--accent);
+    padding: 2px 7px;
+    border-radius: 10px;
+    flex-shrink: 0;
+  }
+
+  .perm-inj-name {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 13px;
+    font-weight: 700;
+    flex: 1;
+  }
+
+  .perm-inj-score {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .perm-inj-chips {
+    padding: 10px 14px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    background: var(--bg);
+  }
+
+  .perm-inj-chip {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    padding: 6px 12px;
+    font-size: 12px;
+    border-radius: 20px;
+    color: var(--ink-light);
+    cursor: pointer;
+    transition: all 0.15s;
+    line-height: 1.4;
+  }
+
+  .perm-inj-chip:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+
+  .perm-inj-chip.used {
+    background: var(--accent-pale);
+    border-color: var(--accent-light);
+    color: var(--accent);
+    cursor: default;
+  }
+
+  /* ── SCORE SUMMARY PANEL ── */
+  .ss-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    transition: background 0.2s;
+  }
+
+  .ss-row:last-child { border-bottom: none; }
+
+  .ss-row.ss-top {
+    background: rgba(196,168,130,0.12);
+  }
+
+  .ss-num {
+    font-size: 11px;
+    color: var(--accent-light);
+    width: 18px;
+    flex-shrink: 0;
+    opacity: 0.7;
+  }
+
+  .ss-name {
+    font-size: 11px;
+    color: rgba(247,244,239,0.75);
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .ss-bar-wrap {
+    width: 60px;
+    height: 4px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 2px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .ss-bar {
+    height: 100%;
+    background: var(--accent-light);
+    border-radius: 2px;
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+
+  .ss-row.ss-top .ss-bar { background: #f7f4ef; }
+
+  .ss-score {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent-light);
+    width: 24px;
+    text-align: right;
+    flex-shrink: 0;
+    transition: color 0.2s;
+  }
+
+  .ss-row.ss-top .ss-score { color: #f7f4ef; }
+
+  @media print {
+    .progress-bar-wrap, .nav-row, .cover-start { display: none !important; }
+    .page { display: block !important; }
+    .cover { min-height: auto; padding: 40px; }
+    body { background: white; }
+  }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover" id="cover">
+  <div class="cover-ornament">Transactional Analysis</div>
+  <h1>
+    <em>Injunction Scale</em>
+    금지명령<br>자기이해 검사
+  </h1>
+  <div class="cover-divider"></div>
+  <p class="cover-sub">
+    어린 시절 내면에 새겨진 삶의 규칙을 탐색합니다<br>
+    교류분석 이론 기반 · 경험요인 + 결정요인 통합 구성<br>
+    총 3부 · 약 15~20분 소요
+  </p>
+  <button class="cover-start btn" onclick="startAssessment()">검사 시작하기 →</button>
+</div>
+
+<!-- PROGRESS BAR -->
+<div class="progress-bar-wrap" id="progress-wrap" style="display:none;">
+  <span id="progress-label">1 / 4</span>
+  <div class="progress-track">
+    <div class="progress-fill" id="progress-fill" style="width:25%"></div>
+  </div>
+  <span id="progress-step-label">경험 탐색</span>
+</div>
+
+<!-- PAGE 1: INSTRUCTIONS + PART A -->
+<div class="page" id="page-1">
+  <div class="section-header">
+    <span class="section-tag tag-A">Part 1 — 경험 탐색</span>
+    <h2>어린 시절, 어떤 메시지를 받았나요?</h2>
+    <p>아래 문항들은 양육자(부모나 주양육자)로부터 경험한 메시지와 관계 방식을 묻습니다.<br>
+    현재의 나에게 얼마나 해당되는지도 함께 떠올리며 응답해주세요.</p>
+  </div>
+
+  <div class="instr-box">
+    <strong>응답 방법</strong><br>
+    각 문항을 읽고, <strong>직관적인 첫 느낌</strong>을 기준으로 1~5점 중 하나를 선택하세요.<br>
+    과거 경험과 현재 패턴을 함께 고려하셔도 됩니다. 정답은 없습니다.
+    <div class="scale-guide">
+      <div class="scale-guide-item"><strong>1</strong>전혀<br>그렇지 않다</div>
+      <div class="scale-guide-item"><strong>2</strong>별로<br>그렇지 않다</div>
+      <div class="scale-guide-item"><strong>3</strong>보통이다</div>
+      <div class="scale-guide-item"><strong>4</strong>대체로<br>그렇다</div>
+      <div class="scale-guide-item"><strong>5</strong>매우<br>그렇다</div>
+    </div>
+  </div>
+
+  <!-- INJUNCTION 1~6 -->
+
+  <!-- 1. 존재하지 말라 -->
+  <div class="inj-card">
+    <div class="inj-card-header">
+      <div class="inj-number">1</div>
+      <div class="inj-title-wrap">
+        <div class="inj-title">존재하지 말라</div>
+        <div class="inj-title-en">Don't exist</div>
+      </div>
+      <div class="inj-score-badge" id="badge-1">0 / 25점</div>
+    </div>
+    <div class="sub-label sub-label-exp">경험 — 어떤 메시지를 받았나</div>
+    <div class="q-row">
+      <div class="q-text">나를 온전히 보살펴 주는 사람이 없었다.</div>
+      <div class="q-scale" data-inj="1" data-part="exp">
+        <label><input type="radio" name="q1_e1" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q1_e1" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q1_e1" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q1_e1" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q1_e1" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="q-row">
+      <div class="q-text">아무도 나의 존재에 대해 진지하게 관심을 갖지 않았다.</div>
+      <div class="q-scale" data-inj="1" data-part="exp">
+        <label><input type="radio" name="q1_e2" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q1_e2" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q1_e2" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q1_e2" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q1_e2" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="sub-label sub-label-dec">결정 — 그때 내린 삶의 결론</div>
+    <div class="q-row">
+      <div class="q-text">나는 존재할 가치가 없다는 느낌이 든다.</div>
+      <div class="q-scale" data-inj="1" data-part="dec">
+        <label><input type="radio" name="q1_d1" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q1_d1" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q1_d1" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q1_d1" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q1_d1" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="q-row">
+      <div class="q-text">나는 누구에게도 특별한 존재가 아니라는 생각이 자주 든다.</div>
+      <div class="q-scale" data-inj="1" data-part="dec">
+        <label><input type="radio" name="q1_d2" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q1_d2" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q1_d2" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q1_d2" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q1_d2" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="q-row">
+      <div class="q-text">내가 있어도 괜찮은가, 라는 의문이 드는 순간이 있다.</div>
+      <div class="q-scale" data-inj="1" data-part="dec">
+        <label><input type="radio" name="q1_d3" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q1_d3" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q1_d3" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q1_d3" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q1_d3" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. 너여서는 안 돼 -->
+  <div class="inj-card">
+    <div class="inj-card-header">
+      <div class="inj-number">2</div>
+      <div class="inj-title-wrap">
+        <div class="inj-title">너 자신이 되지 말라</div>
+        <div class="inj-title-en">Don't be you</div>
+      </div>
+      <div class="inj-score-badge" id="badge-2">0 / 25점</div>
+    </div>
+    <div class="sub-label sub-label-exp">경험 — 어떤 메시지를 받았나</div>
+    <div class="q-row">
+      <div class="q-text">나는 부모나 주양육자가 원하는 모습에 맞추려 노력해야 했다.</div>
+      <div class="q-scale" data-inj="2" data-part="exp">
+        <label><input type="radio" name="q2_e1" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q2_e1" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q2_e1" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q2_e1" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q2_e1" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="q-row">
+      <div class="q-text">나의 성향이나 특성을 그대로 드러냈을 때 부정적인 반응을 받았다.</div>
+      <div class="q-scale" data-inj="2" data-part="exp">
+        <label><input type="radio" name="q2_e2" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q2_e2" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q2_e2" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q2_e2" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q2_e2" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="sub-label sub-label-dec">결정 — 그때 내린 삶의 결론</div>
+    <div class="q-row">
+      <div class="q-text">있는 그대로의 내 모습은 받아들여지지 않을 것이라는 생각이 든다.</div>
+      <div class="q-scale" data-inj="2" data-part="dec">
+        <label><input type="radio" name="q2_d1" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q2_d1" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q2_d1" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q2_d1" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q2_d1" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="q-row">
+      <div class="q-text">나다운 행동을 하면 이상해 보이거나 문제가 될 것 같아 조심한다.</div>
+      <div class="q-scale" data-inj="2" data-part="dec">
+        <label><input type="radio" name="q2_d2" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q2_d2" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q2_d2" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q2_d2" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q2_d2" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="q-row">
+      <div class="q-text">나는 '이런 나'는 안 된다는 생각을 자주 한다.</div>
+      <div class="q-scale" data-inj="2" data-part="dec">
+        <label><input type="radio" name="q2_d3" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q2_d3" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q2_d3" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q2_d3" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q2_d3" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. 아이처럼 굴지 말라 -->
+  <div class="inj-card">
+    <div class="inj-card-header">
+      <div class="inj-number">3</div>
+      <div class="inj-title-wrap">
+        <div class="inj-title">아이가 되지 말라</div>
+        <div class="inj-title-en">Don't be a child</div>
+      </div>
+      <div class="inj-score-badge" id="badge-3">0 / 25점</div>
+    </div>
+    <div class="sub-label sub-label-exp">경험 — 어떤 메시지를 받았나</div>
+    <div class="q-row">
+      <div class="q-text">나는 일찍부터 철들어야 했고, 다른 사람을 먼저 챙겨야 했다.</div>
+      <div class="q-scale" data-inj="3" data-part="exp">
+        <label><input type="radio" name="q3_e1" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q3_e1" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q3_e1" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q3_e1" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q3_e1" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="q-row">
+      <div class="q-text">나는 어린아이처럼 놀거나 즐기는 것이 허용되지 않았다는 느낌이 있다.</div>
+      <div class="q-scale" data-inj="3" data-part="exp">
+        <label><input type="radio" name="q3_e2" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q3_e2" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q3_e2" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q3_e2" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q3_e2" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="sub-label sub-label-dec">결정 — 그때 내린 삶의 결론</div>
+    <div class="q-row">
+      <div class="q-text">도움을 요청하거나 다른 사람에게 기대는 것이 어렵다.</div>
+      <div class="q-scale" data-inj="3" data-part="dec">
+        <label><input type="radio" name="q3_d1" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q3_d1" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q3_d1" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q3_d1" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q3_d1" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="q-row">
+      <div class="q-text">내 일은 남의 도움 없이 스스로 해결해야 한다고 생각한다.</div>
+      <div class="q-scale" data-inj="3" data-part="dec">
+        <label><input type="radio" name="q3_d2" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q3_d2" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q3_d2" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q3_d2" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q3_d2" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="q-row">
+      <div class="q-text">편하게 쉬거나 즐기고 있으면 죄책감이나 불안이 올라온다.</div>
+      <div class="q-scale" data-inj="3" data-part="dec">
+        <label><input type="radio" name="q3_d3" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q3_d3" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q3_d3" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q3_d3" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q3_d3" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. 성장하지 말라 -->
+  <div class="inj-card">
+    <div class="inj-card-header">
+      <div class="inj-number">4</div>
+      <div class="inj-title-wrap">
+        <div class="inj-title">성장하지 말라</div>
+        <div class="inj-title-en">Don't grow up</div>
+      </div>
+      <div class="inj-score-badge" id="badge-4">0 / 25점</div>
+    </div>
+    <div class="sub-label sub-label-exp">경험 — 어떤 메시지를 받았나</div>
+    <div class="q-row">
+      <div class="q-text">부모나 주양육자가 나의 일에 과도하게 간섭하거나 대신 결정해주었다.</div>
+      <div class="q-scale" data-inj="4" data-part="exp">
+        <label><input type="radio" name="q4_e1" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q4_e1" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q4_e1" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q4_e1" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q4_e1" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="q-row">
+      <div class="q-text">스스로 선택하거나 결정해본 경험이 별로 없다.</div>
+      <div class="q-scale" data-inj="4" data-part="exp">
+        <label><input type="radio" name="q4_e2" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q4_e2" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q4_e2" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q4_e2" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q4_e2" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="sub-label sub-label-dec">결정 — 그때 내린 삶의 결론</div>
+    <div class="q-row">
+      <div class="q-text">독립적으로 살아가거나 새로운 환경에 적응하는 것이 두렵게 느껴진다.</div>
+      <div class="q-scale" data-inj="4" data-part="dec">
+        <label><input type="radio" name="q4_d1" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q4_d1" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q4_d1" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q4_d1" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q4_d1" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="q-row">
+      <div class="q-text">무언가를 결정할 때 여전히 누군가의 허락이나 확인이 필요하다고 느낀다.</div>
+      <div class="q-scale" data-inj="4" data-part="dec">
+        <label><input type="radio" name="q4_d2" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q4_d2" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q4_d2" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q4_d2" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q4_d2" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="q-row">
+      <div class="q-text">스스로는 혼자 감당하기 어렵다는 생각이 자주 든다.</div>
+      <div class="q-scale" data-inj="4" data-part="dec">
+        <label><input type="radio" name="q4_d3" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q4_d3" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q4_d3" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q4_d3" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q4_d3" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. 성공하지 말라 -->
+  <div class="inj-card">
+    <div class="inj-card-header">
+      <div class="inj-number">5</div>
+      <div class="inj-title-wrap">
+        <div class="inj-title">성공하지 말라</div>
+        <div class="inj-title-en">Don't make it</div>
+      </div>
+      <div class="inj-score-badge" id="badge-5">0 / 25점</div>
+    </div>
+    <div class="sub-label sub-label-exp">경험 — 어떤 메시지를 받았나</div>
+    <div class="q-row">
+      <div class="q-text">잘 해도 충분히 인정받지 못했거나, 오히려 비난이나 평가절하를 받았다.</div>
+      <div class="q-scale" data-inj="5" data-part="exp">
+        <label><input type="radio" name="q5_e1" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q5_e1" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q5_e1" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q5_e1" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q5_e1" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="q-row">
+      <div class="q-text">무엇을 해도 실패감이나 무능함을 전달받는 경험이 있었다.</div>
+      <div class="q-scale" data-inj="5" data-part="exp">
+        <label><input type="radio" name="q5_e2" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q5_e2" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q5_e2" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q5_e2" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q5_e2" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="sub-label sub-label-dec">결정 — 그때 내린 삶의 결론</div>
+    <div class="q-row">
+      <div class="q-text">내가 제대로 해낼 수 있는 일은 없다는 생각이 자주 든다.</div>
+      <div class="q-scale" data-inj="5" data-part="dec">
+        <label><input type="radio" name="q5_d1" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q5_d1" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q5_d1" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q5_d1" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q5_d1" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="q-row">
+      <div class="q-text">잘될 것 같은 상황에서 오히려 불안해지거나, 스스로 발목을 잡는 경향이 있다.</div>
+      <div class="q-scale" data-inj="5" data-part="dec">
+        <label><input type="radio" name="q5_d2" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q5_d2" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q5_d2" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q5_d2" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q5_d2" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="q-row">
+      <div class="q-text">성공하거나 앞서가면 중요한 사람과 멀어질 것 같은 느낌이 든다.</div>
+      <div class="q-scale" data-inj="5" data-part="dec">
+        <label><input type="radio" name="q5_d3" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q5_d3" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q5_d3" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q5_d3" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q5_d3" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. 실행하지 말라 -->
+  <div class="inj-card">
+    <div class="inj-card-header">
+      <div class="inj-number">6</div>
+      <div class="inj-title-wrap">
+        <div class="inj-title">실행하지 말라</div>
+        <div class="inj-title-en">Don't do anything</div>
+      </div>
+      <div class="inj-score-badge" id="badge-6">0 / 25점</div>
+    </div>
+    <div class="sub-label sub-label-exp">경험 — 어떤 메시지를 받았나</div>
+    <div class="q-row">
+      <div class="q-text">뭔가 하려고 할 때 주양육자가 "하지 마라", "위험해"라는 말을 자주 했다.</div>
+      <div class="q-scale" data-inj="6" data-part="exp">
+        <label><input type="radio" name="q6_e1" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q6_e1" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q6_e1" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q6_e1" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q6_e1" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="q-row">
+      <div class="q-text">스스로 선택하고 행동하기보다 승인이나 지시를 기다려야 했다.</div>
+      <div class="q-scale" data-inj="6" data-part="exp">
+        <label><input type="radio" name="q6_e2" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q6_e2" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q6_e2" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q6_e2" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q6_e2" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="sub-label sub-label-dec">결정 — 그때 내린 삶의 결론</div>
+    <div class="q-row">
+      <div class="q-text">무언가를 시작하기 전에 오래 망설이고 생각만 하는 경우가 많다.</div>
+      <div class="q-scale" data-inj="6" data-part="dec">
+        <label><input type="radio" name="q6_d1" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q6_d1" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q6_d1" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q6_d1" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q6_d1" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="q-row">
+      <div class="q-text">실수할까봐 행동을 미루거나, 아무것도 하지 않는 것이 더 안전하다고 느낀다.</div>
+      <div class="q-scale" data-inj="6" data-part="dec">
+        <label><input type="radio" name="q6_d2" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q6_d2" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q6_d2" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q6_d2" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q6_d2" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="q-row">
+      <div class="q-text">'괜히 했다가 잘못될까봐'라는 생각이 행동을 가로막는다.</div>
+      <div class="q-scale" data-inj="6" data-part="dec">
+        <label><input type="radio" name="q6_d3" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q6_d3" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q6_d3" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q6_d3" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q6_d3" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+  </div>
+
+  <div class="val-warn" id="warn-1">응답하지 않은 문항이 있습니다. 모든 문항에 응답한 후 다음으로 넘어가주세요.</div>
+  <div class="nav-row">
+    <div></div>
+    <button class="btn btn-primary" onclick="goNext(1)">다음 → 7~12번</button>
+  </div>
+</div>
+
+<!-- PAGE 2: INJUNCTIONS 7~12 -->
+<div class="page" id="page-2">
+  <div class="section-header">
+    <span class="section-tag tag-A">Part 1 — 경험 탐색 (계속)</span>
+    <h2>나를 둘러싼 메시지들</h2>
+    <p>관계, 소속감, 감정, 생각에 관한 금지명령을 탐색합니다.</p>
+  </div>
+
+  <!-- 7. 중요한 인물이 되지 말라 -->
+  <div class="inj-card">
+    <div class="inj-card-header">
+      <div class="inj-number">7</div>
+      <div class="inj-title-wrap">
+        <div class="inj-title">중요해지지 말라</div>
+        <div class="inj-title-en">Don't be important</div>
+      </div>
+      <div class="inj-score-badge" id="badge-7">0 / 25점</div>
+    </div>
+    <div class="sub-label sub-label-exp">경험 — 어떤 메시지를 받았나</div>
+    <div class="q-row">
+      <div class="q-text">내 욕구나 의견은 자주 무시당하거나 중요하게 다루어지지 않았다.</div>
+      <div class="q-scale" data-inj="7" data-part="exp">
+        <label><input type="radio" name="q7_e1" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q7_e1" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q7_e1" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q7_e1" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q7_e1" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="q-row">
+      <div class="q-text">책임 있는 역할을 맡거나 중요한 일에 참여하는 것을 허용받지 못했다.</div>
+      <div class="q-scale" data-inj="7" data-part="exp">
+        <label><input type="radio" name="q7_e2" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q7_e2" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q7_e2" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q7_e2" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q7_e2" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="sub-label sub-label-dec">결정 — 그때 내린 삶의 결론</div>
+    <div class="q-row">
+      <div class="q-text">내 욕구나 바람을 앞세우는 것이 불편하거나 부담스럽다.</div>
+      <div class="q-scale" data-inj="7" data-part="dec">
+        <label><input type="radio" name="q7_d1" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q7_d1" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q7_d1" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q7_d1" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q7_d1" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="q-row">
+      <div class="q-text">중요한 역할이나 자리를 맡는 것을 피하려는 경향이 있다.</div>
+      <div class="q-scale" data-inj="7" data-part="dec">
+        <label><input type="radio" name="q7_d2" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q7_d2" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q7_d2" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q7_d2" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q7_d2" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="q-row">
+      <div class="q-text">나보다 다른 사람이 더 중요하다고 느끼며 그들의 욕구를 먼저 충족시키려 한다.</div>
+      <div class="q-scale" data-inj="7" data-part="dec">
+        <label><input type="radio" name="q7_d3" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q7_d3" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q7_d3" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q7_d3" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q7_d3" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. 소속되지 말라 -->
+  <div class="inj-card">
+    <div class="inj-card-header">
+      <div class="inj-number">8</div>
+      <div class="inj-title-wrap">
+        <div class="inj-title">소속되지 말라</div>
+        <div class="inj-title-en">Don't belong</div>
+      </div>
+      <div class="inj-score-badge" id="badge-8">0 / 25점</div>
+    </div>
+    <div class="sub-label sub-label-exp">경험 — 어떤 메시지를 받았나</div>
+    <div class="q-row">
+      <div class="q-text">가족이 다른 사람들과 어울리지 않거나, 고립된 생활방식을 유지했다.</div>
+      <div class="q-scale" data-inj="8" data-part="exp">
+        <label><input type="radio" name="q8_e1" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q8_e1" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q8_e1" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q8_e1" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q8_e1" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="q-row">
+      <div class="q-text">나는 다른 아이들과 다르다거나 특별하다는 말을 자주 들었다.</div>
+      <div class="q-scale" data-inj="8" data-part="exp">
+        <label><input type="radio" name="q8_e2" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q8_e2" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q8_e2" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q8_e2" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q8_e2" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="sub-label sub-label-dec">결정 — 그때 내린 삶의 결론</div>
+    <div class="q-row">
+      <div class="q-text">집단 속에 있어도 어딘가 소속되지 않은 느낌이 든다.</div>
+      <div class="q-scale" data-inj="8" data-part="dec">
+        <label><input type="radio" name="q8_d1" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q8_d1" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q8_d1" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q8_d1" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q8_d1" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="q-row">
+      <div class="q-text">어디에도 완전히 속하지 못한다는 느낌이 있다.</div>
+      <div class="q-scale" data-inj="8" data-part="dec">
+        <label><input type="radio" name="q8_d2" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q8_d2" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q8_d2" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q8_d2" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q8_d2" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="q-row">
+      <div class="q-text">관계 속에서 거리감을 유지하거나 혼자 있는 것이 더 편하다.</div>
+      <div class="q-scale" data-inj="8" data-part="dec">
+        <label><input type="radio" name="q8_d3" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q8_d3" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q8_d3" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q8_d3" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q8_d3" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. 가까이 오지 말라 -->
+  <div class="inj-card">
+    <div class="inj-card-header">
+      <div class="inj-number">9</div>
+      <div class="inj-title-wrap">
+        <div class="inj-title">친밀해지지 말라</div>
+        <div class="inj-title-en">Don't be close</div>
+      </div>
+      <div class="inj-score-badge" id="badge-9">0 / 25점</div>
+    </div>
+    <div class="sub-label sub-label-exp">경험 — 어떤 메시지를 받았나</div>
+    <div class="q-row">
+      <div class="q-text">애정 표현이 거의 없는 가정에서 자랐거나, 친밀감을 표현했을 때 거절당한 경험이 있다.</div>
+      <div class="q-scale" data-inj="9" data-part="exp">
+        <label><input type="radio" name="q9_e1" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q9_e1" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q9_e1" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q9_e1" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q9_e1" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="q-row">
+      <div class="q-text">가족 내에서 신뢰가 자주 깨지거나, 가까운 관계가 상처를 주는 경험이 반복되었다.</div>
+      <div class="q-scale" data-inj="9" data-part="exp">
+        <label><input type="radio" name="q9_e2" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q9_e2" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q9_e2" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q9_e2" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q9_e2" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="sub-label sub-label-dec">결정 — 그때 내린 삶의 결론</div>
+    <div class="q-row">
+      <div class="q-text">마음을 주면 결국 상처받을 것이라는 생각이 있어 깊은 관계를 경계한다.</div>
+      <div class="q-scale" data-inj="9" data-part="dec">
+        <label><input type="radio" name="q9_d1" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q9_d1" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q9_d1" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q9_d1" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q9_d1" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="q-row">
+      <div class="q-text">속마음을 쉽게 드러내지 않고, 가까워질수록 거리를 두고 싶어진다.</div>
+      <div class="q-scale" data-inj="9" data-part="dec">
+        <label><input type="radio" name="q9_d2" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q9_d2" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q9_d2" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q9_d2" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q9_d2" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="q-row">
+      <div class="q-text">친밀감을 나누는 것이 어색하거나 불편하게 느껴질 때가 있다.</div>
+      <div class="q-scale" data-inj="9" data-part="dec">
+        <label><input type="radio" name="q9_d3" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q9_d3" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q9_d3" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q9_d3" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q9_d3" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10. 건강하지 말라 -->
+  <div class="inj-card">
+    <div class="inj-card-header">
+      <div class="inj-number">10</div>
+      <div class="inj-title-wrap">
+        <div class="inj-title">건강하지 말라</div>
+        <div class="inj-title-en">Don't be well / Don't be sane</div>
+      </div>
+      <div class="inj-score-badge" id="badge-10">0 / 25점</div>
+    </div>
+    <div class="sub-label sub-label-exp">경험 — 어떤 메시지를 받았나</div>
+    <div class="q-row">
+      <div class="q-text">아프거나 힘들 때에만 주양육자가 관심을 주었다.</div>
+      <div class="q-scale" data-inj="10" data-part="exp">
+        <label><input type="radio" name="q10_e1" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q10_e1" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q10_e1" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q10_e1" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q10_e1" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="q-row">
+      <div class="q-text">신체적으로 약하다는 이야기를 자주 들었거나, 가족 중 병약한 모델이 있었다.</div>
+      <div class="q-scale" data-inj="10" data-part="exp">
+        <label><input type="radio" name="q10_e2" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q10_e2" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q10_e2" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q10_e2" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q10_e2" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="sub-label sub-label-dec">결정 — 그때 내린 삶의 결론</div>
+    <div class="q-row">
+      <div class="q-text">내가 힘들거나 아파야 사람들이 나를 신경 써줄 것 같은 느낌이 든다.</div>
+      <div class="q-scale" data-inj="10" data-part="dec">
+        <label><input type="radio" name="q10_d1" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q10_d1" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q10_d1" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q10_d1" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q10_d1" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="q-row">
+      <div class="q-text">컨디션이 좋거나 상황이 잘 풀릴 때 오히려 불안해지거나 경계하게 된다.</div>
+      <div class="q-scale" data-inj="10" data-part="dec">
+        <label><input type="radio" name="q10_d2" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q10_d2" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q10_d2" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q10_d2" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q10_d2" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="q-row">
+      <div class="q-text">괜찮아지는 것이 낯설게 느껴지거나, 회복되는 것에 저항감이 든다.</div>
+      <div class="q-scale" data-inj="10" data-part="dec">
+        <label><input type="radio" name="q10_d3" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q10_d3" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q10_d3" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q10_d3" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q10_d3" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- 11. 생각하지 말라 -->
+  <div class="inj-card">
+    <div class="inj-card-header">
+      <div class="inj-number">11</div>
+      <div class="inj-title-wrap">
+        <div class="inj-title">생각하지 말라</div>
+        <div class="inj-title-en">Don't think</div>
+      </div>
+      <div class="inj-score-badge" id="badge-11">0 / 25점</div>
+    </div>
+    <div class="sub-label sub-label-exp">경험 — 어떤 메시지를 받았나</div>
+    <div class="q-row">
+      <div class="q-text">나의 질문이나 생각이 자주 무시당하거나, 부모의 생각을 강요받았다.</div>
+      <div class="q-scale" data-inj="11" data-part="exp">
+        <label><input type="radio" name="q11_e1" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q11_e1" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q11_e1" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q11_e1" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q11_e1" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="q-row">
+      <div class="q-text">가족 내에서 특정 주제(돈, 성, 갈등 등)에 대해 이야기하는 것이 금지되었다.</div>
+      <div class="q-scale" data-inj="11" data-part="exp">
+        <label><input type="radio" name="q11_e2" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q11_e2" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q11_e2" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q11_e2" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q11_e2" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="sub-label sub-label-dec">결정 — 그때 내린 삶의 결론</div>
+    <div class="q-row">
+      <div class="q-text">내 생각이나 의견을 표현하는 것이 조심스럽고, 틀릴까봐 쉽게 말하지 않는다.</div>
+      <div class="q-scale" data-inj="11" data-part="dec">
+        <label><input type="radio" name="q11_d1" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q11_d1" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q11_d1" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q11_d1" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q11_d1" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="q-row">
+      <div class="q-text">스스로 판단하기보다 다른 사람의 의견이나 지시를 따르는 것이 더 편하다.</div>
+      <div class="q-scale" data-inj="11" data-part="dec">
+        <label><input type="radio" name="q11_d2" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q11_d2" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q11_d2" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q11_d2" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q11_d2" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="q-row">
+      <div class="q-text">내 생각은 중요하지 않다는 느낌이 들어 주장하기보다 이해한 척 넘어간다.</div>
+      <div class="q-scale" data-inj="11" data-part="dec">
+        <label><input type="radio" name="q11_d3" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q11_d3" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q11_d3" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q11_d3" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q11_d3" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- 12. 감정을 느끼지 말라 -->
+  <div class="inj-card">
+    <div class="inj-card-header">
+      <div class="inj-number">12</div>
+      <div class="inj-title-wrap">
+        <div class="inj-title">느끼지 말라</div>
+        <div class="inj-title-en">Don't feel</div>
+      </div>
+      <div class="inj-score-badge" id="badge-12">0 / 25점</div>
+    </div>
+    <div class="sub-label sub-label-exp">경험 — 어떤 메시지를 받았나</div>
+    <div class="q-row">
+      <div class="q-text">감정 표현이 통제되거나 비난받은 경험이 있고, 가족 내 정서 교류가 거의 없었다.</div>
+      <div class="q-scale" data-inj="12" data-part="exp">
+        <label><input type="radio" name="q12_e1" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q12_e1" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q12_e1" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q12_e1" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q12_e1" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="q-row">
+      <div class="q-text">나의 감정을 제대로 이해해주는 사람이 없었다.</div>
+      <div class="q-scale" data-inj="12" data-part="exp">
+        <label><input type="radio" name="q12_e2" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q12_e2" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q12_e2" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q12_e2" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q12_e2" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="sub-label sub-label-dec">결정 — 그때 내린 삶의 결론</div>
+    <div class="q-row">
+      <div class="q-text">감정을 드러내는 것이 위험하거나 약해 보인다고 느껴 억누르는 편이다.</div>
+      <div class="q-scale" data-inj="12" data-part="dec">
+        <label><input type="radio" name="q12_d1" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q12_d1" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q12_d1" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q12_d1" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q12_d1" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="q-row">
+      <div class="q-text">내 감정보다 다른 사람의 감정이 더 중요하다고 느끼며 내 감정을 뒤로 미룬다.</div>
+      <div class="q-scale" data-inj="12" data-part="dec">
+        <label><input type="radio" name="q12_d2" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q12_d2" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q12_d2" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q12_d2" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q12_d2" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+    <div class="q-row">
+      <div class="q-text">내 감정이 무엇인지 스스로도 잘 모를 때가 있다.</div>
+      <div class="q-scale" data-inj="12" data-part="dec">
+        <label><input type="radio" name="q12_d3" value="1"><span class="dot">1</span></label>
+        <label><input type="radio" name="q12_d3" value="2"><span class="dot">2</span></label>
+        <label><input type="radio" name="q12_d3" value="3"><span class="dot">3</span></label>
+        <label><input type="radio" name="q12_d3" value="4"><span class="dot">4</span></label>
+        <label><input type="radio" name="q12_d3" value="5"><span class="dot">5</span></label>
+      </div>
+    </div>
+  </div>
+
+  <div class="val-warn" id="warn-2">응답하지 않은 문항이 있습니다. 모든 문항에 응답한 후 다음으로 넘어가주세요.</div>
+  <div class="nav-row">
+    <button class="btn btn-secondary" onclick="goPrev(2)">← 이전</button>
+    <button class="btn btn-primary" onclick="goNext(2)">다음 → 몸이 보내는 신호</button>
+  </div>
+</div>
+
+<!-- PAGE 3: BODY & EMOTION SIGNALS -->
+<div class="page" id="page-3">
+  <div class="section-header">
+    <span class="section-tag tag-B">Part 2 — 몸이 보내는 신호</span>
+    <h2>말보다 먼저, 몸과 마음이 보내는 신호</h2>
+    <p>금지명령은 말이 아니라 비언어로 각인되기 때문에, 머리로 떠올리는 것만으로는 잘 잡히지 않을 때가 많습니다.<br>
+    최근 한두 주를 떠올리며, 자주 느꼈던 감정과 몸의 반응을 편하게 골라보세요. 몇 개를 골라도 정답은 없습니다.</p>
+  </div>
+
+  <div class="signal-group">
+    <div class="signal-group-title">정서 신호</div>
+    <div class="signal-group-hint">이 중 최근 자주 느꼈던 감정에 표시해보세요.</div>
+    <div class="signal-chip-grid">
+      <label class="signal-chip"><input type="checkbox" class="signal-check" data-cat="정서" value="좌절감"><span>좌절감</span></label>
+      <label class="signal-chip"><input type="checkbox" class="signal-check" data-cat="정서" value="후회스러움"><span>후회스러움</span></label>
+      <label class="signal-chip"><input type="checkbox" class="signal-check" data-cat="정서" value="부끄러움"><span>부끄러움</span></label>
+      <label class="signal-chip"><input type="checkbox" class="signal-check" data-cat="정서" value="불안함"><span>불안함</span></label>
+      <label class="signal-chip"><input type="checkbox" class="signal-check" data-cat="정서" value="초조함"><span>초조함</span></label>
+      <label class="signal-chip"><input type="checkbox" class="signal-check" data-cat="정서" value="외로움"><span>외로움</span></label>
+      <label class="signal-chip"><input type="checkbox" class="signal-check" data-cat="정서" value="고립감"><span>고립감</span></label>
+      <label class="signal-chip"><input type="checkbox" class="signal-check" data-cat="정서" value="헛헛함"><span>헛헛함</span></label>
+      <label class="signal-chip"><input type="checkbox" class="signal-check" data-cat="정서" value="실망스러움"><span>실망스러움</span></label>
+      <label class="signal-chip"><input type="checkbox" class="signal-check" data-cat="정서" value="두려움"><span>두려움</span></label>
+      <label class="signal-chip"><input type="checkbox" class="signal-check" data-cat="정서" value="위축감"><span>위축감</span></label>
+      <label class="signal-chip"><input type="checkbox" class="signal-check" data-cat="정서" value="무력감"><span>무력감</span></label>
+      <label class="signal-chip"><input type="checkbox" class="signal-check" data-cat="정서" value="상실감"><span>상실감</span></label>
+      <label class="signal-chip"><input type="checkbox" class="signal-check" data-cat="정서" value="슬픔"><span>슬픔</span></label>
+      <label class="signal-chip"><input type="checkbox" class="signal-check" data-cat="정서" value="분노"><span>분노</span></label>
+      <label class="signal-chip"><input type="checkbox" class="signal-check" data-cat="정서" value="미움"><span>미움</span></label>
+      <label class="signal-chip"><input type="checkbox" class="signal-check" data-cat="정서" value="우울"><span>우울</span></label>
+      <label class="signal-chip"><input type="checkbox" class="signal-check" data-cat="정서" value="무덤덤함"><span>무덤덤함(아무 느낌이 없음)</span></label>
+    </div>
+  </div>
+
+  <div class="signal-group">
+    <div class="signal-group-title">신체 신호</div>
+    <div class="signal-group-hint">스트레스 상황에서 몸이 먼저 보내는 반응을 골라보세요.</div>
+    <div class="signal-chip-grid">
+      <label class="signal-chip"><input type="checkbox" class="signal-check" data-cat="신체" value="손발이 차가워짐"><span>손발이 차가워짐</span></label>
+      <label class="signal-chip"><input type="checkbox" class="signal-check" data-cat="신체" value="두통"><span>두통</span></label>
+      <label class="signal-chip"><input type="checkbox" class="signal-check" data-cat="신체" value="속이 쓰리거나 체함"><span>속이 쓰리거나 체함</span></label>
+      <label class="signal-chip"><input type="checkbox" class="signal-check" data-cat="신체" value="어지러움"><span>어지러움</span></label>
+      <label class="signal-chip"><input type="checkbox" class="signal-check" data-cat="신체" value="심장이 빨리 뜀"><span>심장이 빨리 뜀</span></label>
+      <label class="signal-chip"><input type="checkbox" class="signal-check" data-cat="신체" value="식은땀"><span>식은땀</span></label>
+      <label class="signal-chip"><input type="checkbox" class="signal-check" data-cat="신체" value="목이 조이는 느낌"><span>목이 조이는 느낌</span></label>
+      <label class="signal-chip"><input type="checkbox" class="signal-check" data-cat="신체" value="손톱·입술을 물어뜯음"><span>손톱·입술을 물어뜯음</span></label>
+      <label class="signal-chip"><input type="checkbox" class="signal-check" data-cat="신체" value="갑자기 몸에 힘이 빠짐"><span>갑자기 몸에 힘이 빠짐</span></label>
+      <label class="signal-chip"><input type="checkbox" class="signal-check" data-cat="신체" value="가슴이 답답함"><span>가슴이 답답함</span></label>
+    </div>
+  </div>
+
+  <div class="instr-box" style="border-left-color: var(--section-B-accent);">
+    <strong>왜 이 페이지가 필요한가요?</strong><br>
+    금지명령은 대개 언어를 배우기 이전, 영유아기부터 6~8세 사이에 비언어로 새겨집니다. 그래서 "왜 그런지" 설명하기는 어려운데
+    몸과 감정은 먼저 반응합니다. 여기서 고른 항목들은 결과 해석에서 함께 참고됩니다.
+  </div>
+
+  <!-- 점수 총람 패널 -->
+  <div id="score-summary-panel" style="
+    background: var(--ink);
+    color: var(--bg);
+    margin-top: 32px;
+    overflow: hidden;
+  ">
+    <div style="
+      padding: 14px 20px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    ">
+      <div>
+        <div style="font-size:10px;letter-spacing:0.2em;color:var(--accent-light);text-transform:uppercase;margin-bottom:3px;">Score Summary</div>
+        <div style="font-family:'Noto Serif KR',serif;font-size:16px;font-weight:700;">12개 금지명령 점수 총람</div>
+      </div>
+      <div style="text-align:right;font-size:11px;color:rgba(247,244,239,0.45);line-height:1.6;">
+        각 항목 최대 25점<br>
+        실시간 업데이트
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
+      <!-- 1~6 -->
+      <div style="border-right:1px solid rgba(255,255,255,0.07);">
+        <div id="ss-1" class="ss-row"><div class="ss-num">①</div><div class="ss-name">존재하지 말라</div><div class="ss-bar-wrap"><div class="ss-bar" id="ssb-1"></div></div><div class="ss-score" id="sss-1">0</div></div>
+        <div id="ss-2" class="ss-row"><div class="ss-num">②</div><div class="ss-name">너 자신이 되지 말라</div><div class="ss-bar-wrap"><div class="ss-bar" id="ssb-2"></div></div><div class="ss-score" id="sss-2">0</div></div>
+        <div id="ss-3" class="ss-row"><div class="ss-num">③</div><div class="ss-name">아이가 되지 말라</div><div class="ss-bar-wrap"><div class="ss-bar" id="ssb-3"></div></div><div class="ss-score" id="sss-3">0</div></div>
+        <div id="ss-4" class="ss-row"><div class="ss-num">④</div><div class="ss-name">성장하지 말라</div><div class="ss-bar-wrap"><div class="ss-bar" id="ssb-4"></div></div><div class="ss-score" id="sss-4">0</div></div>
+        <div id="ss-5" class="ss-row"><div class="ss-num">⑤</div><div class="ss-name">성공하지 말라</div><div class="ss-bar-wrap"><div class="ss-bar" id="ssb-5"></div></div><div class="ss-score" id="sss-5">0</div></div>
+        <div id="ss-6" class="ss-row"><div class="ss-num">⑥</div><div class="ss-name">실행하지 말라</div><div class="ss-bar-wrap"><div class="ss-bar" id="ssb-6"></div></div><div class="ss-score" id="sss-6">0</div></div>
+      </div>
+      <!-- 7~12 -->
+      <div>
+        <div id="ss-7" class="ss-row"><div class="ss-num">⑦</div><div class="ss-name">중요해지지 말라</div><div class="ss-bar-wrap"><div class="ss-bar" id="ssb-7"></div></div><div class="ss-score" id="sss-7">0</div></div>
+        <div id="ss-8" class="ss-row"><div class="ss-num">⑧</div><div class="ss-name">소속되지 말라</div><div class="ss-bar-wrap"><div class="ss-bar" id="ssb-8"></div></div><div class="ss-score" id="sss-8">0</div></div>
+        <div id="ss-9" class="ss-row"><div class="ss-num">⑨</div><div class="ss-name">친밀해지지 말라</div><div class="ss-bar-wrap"><div class="ss-bar" id="ssb-9"></div></div><div class="ss-score" id="sss-9">0</div></div>
+        <div id="ss-10" class="ss-row"><div class="ss-num">⑩</div><div class="ss-name">건강하지 말라</div><div class="ss-bar-wrap"><div class="ss-bar" id="ssb-10"></div></div><div class="ss-score" id="sss-10">0</div></div>
+        <div id="ss-11" class="ss-row"><div class="ss-num">⑪</div><div class="ss-name">생각하지 말라</div><div class="ss-bar-wrap"><div class="ss-bar" id="ssb-11"></div></div><div class="ss-score" id="sss-11">0</div></div>
+        <div id="ss-12" class="ss-row"><div class="ss-num">⑫</div><div class="ss-name">느끼지 말라</div><div class="ss-bar-wrap"><div class="ss-bar" id="ssb-12"></div></div><div class="ss-score" id="sss-12">0</div></div>
+      </div>
+    </div>
+
+    <div style="padding:10px 20px;border-top:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:space-between;">
+      <div style="font-size:11px;color:rgba(247,244,239,0.4);">
+        ★ 표시는 현재 최고 점수 항목
+      </div>
+      <div style="font-size:11px;color:rgba(247,244,239,0.4);">
+        총점 <span id="ss-total" style="font-family:'Noto Serif KR',serif;font-size:14px;color:var(--accent-light);font-weight:700;">0</span> / 300
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-row">
+    <button class="btn btn-secondary" onclick="goPrev(3)">← 이전</button>
+    <button class="btn btn-primary" onclick="goNext(3)">다음 → 허가 문장</button>
+  </div>
+</div>
+
+<!-- PAGE 4: PERMISSION -->
+<div class="page" id="page-4">
+  <div class="section-header">
+    <span class="section-tag tag-C">Part 3 — 허가 문장</span>
+    <h2>나 자신에게 보내는 새로운 메시지</h2>
+    <p>금지명령의 반대편에는 <strong>허가(permission)</strong>가 있습니다.<br>
+    지금의 나에게 필요한 말, 들어야 했지만 듣지 못한 말을 직접 써보세요.</p>
+  </div>
+
+  <div class="permission-intro">
+    <h3>허가 문장이란?</h3>
+    금지명령이 "~하지 말라"는 제한이라면, 허가 문장은 "~해도 괜찮다"는 내면의 승인입니다.<br>
+    어린 시절 받지 못했던 말, 지금의 나에게 진심으로 필요한 말을 적어보세요.<br>
+    마음에 닿는 문장을 클릭하면 아래 입력란에 바로 추가됩니다.
+    <div class="permission-example" id="perm-chip-box" style="margin-top:14px;"></div>
+  </div>
+
+  <div class="permission-rows" id="permission-rows">
+    <div class="permission-row">
+      <div class="permission-num">1.</div>
+      <div style="flex:1;">
+        <input class="permission-input" placeholder="나는 ______________ 해도 괜찮다" id="perm1">
+      </div>
+    </div>
+    <div class="permission-row">
+      <div class="permission-num">2.</div>
+      <div style="flex:1;">
+        <input class="permission-input" placeholder="나는 ______________ 해도 괜찮다" id="perm2">
+      </div>
+    </div>
+    <div class="permission-row">
+      <div class="permission-num">3.</div>
+      <div style="flex:1;">
+        <input class="permission-input" placeholder="나는 ______________ 해도 괜찮다" id="perm3">
+      </div>
+    </div>
+    <div class="permission-row">
+      <div class="permission-num">4.</div>
+      <div style="flex:1;">
+        <input class="permission-input" placeholder="나는 ______________ 해도 괜찮다" id="perm4">
+      </div>
+    </div>
+  </div>
+
+  <div style="background:var(--accent-pale);border:1px solid var(--border);padding:16px 20px;margin-top:20px;font-size:13px;color:var(--ink-light);line-height:1.8;">
+    <strong style="color:var(--accent);">Tip.</strong> 다 쓰셨다면, 소리 내어 한 번 읽어보세요.<br>
+    어색하거나 불편하게 느껴지는 문장이 있다면, 그것이 지금 가장 필요한 허가일 수 있습니다.
+  </div>
+
+  <div class="nav-row">
+    <button class="btn btn-secondary" onclick="goPrev(4)">← 이전</button>
+    <button class="btn btn-primary" onclick="showResult()">결과 보기 →</button>
+  </div>
+</div>
+
+<!-- RESULT PAGE -->
+<div class="page" id="page-result">
+  <div class="result-header">
+    <div class="section-tag tag-neutral" style="margin-bottom:16px;">검사 결과</div>
+    <h2>나의 금지명령 프로파일</h2>
+    <p>아래 결과는 자기이해를 위한 탐색 자료입니다.<br>높은 점수는 그 영역의 메시지가 지금도 강하게 작동하고 있음을 의미합니다.</p>
+  </div>
+
+  <div class="summary-box" id="summary-box">
+    <h3>주요 금지명령 (상위 3개)</h3>
+    <div class="summary-top-items" id="summary-top-items"></div>
+  </div>
+
+  <div class="result-grid" id="result-grid"></div>
+
+  <div style="margin-bottom:28px;">
+    <div class="section-tag tag-B" style="margin-bottom:16px;">몸이 보내는 신호</div>
+    <div class="refl-result-box" id="signal-result-list"></div>
+  </div>
+
+  <div>
+    <div class="section-tag tag-C" style="margin-bottom:16px;">나의 허가 문장</div>
+    <div class="perm-result-list" id="perm-result-list"></div>
+  </div>
+
+  <div class="nav-row" style="margin-top:40px;">
+    <button class="btn btn-secondary" onclick="window.print()">🖨 인쇄하기</button>
+    <button class="btn btn-primary" onclick="restart()">처음으로</button>
+  </div>
+  <p class="print-note">인쇄 시 결과지 전체가 출력됩니다</p>
+  <p style="text-align:center;font-size:11px;color:var(--ink-muted);margin-top:8px;line-height:1.6;">
+    이 검사는 강남욱(2021), 경상국립대학교 박사학위논문의 금지명령 척도 프레임(경험요인·결정요인)과<br>
+    김정현, 《에릭 번의 감정 수업》(유노북스, 2022)의 스토퍼·복합결정·신체신호 개념을 참고하여 재구성한 자기이해용 도구이며, 표준화된 심리검사가 아닙니다.
+  </p>
+</div>
+
+<script>
+const injNames = [
+  '', '존재하지 말라', '너 자신이 되지 말라', '아이가 되지 말라',
+  '성장하지 말라', '성공하지 말라', '실행하지 말라',
+  '중요해지지 말라', '소속되지 말라', '친밀해지지 말라',
+  '건강하지 말라', '생각하지 말라', '느끼지 말라'
+];
+
+const injMeaning = [
+  '',
+  '존재감·자기 가치에 대한 근본적인 의문',
+  '있는 그대로의 자신을 드러내기 어려운 패턴',
+  '의존·휴식·즐김에 대한 죄책감과 혼자 해결 경향',
+  '독립과 분리에 대한 두려움, 허락 필요 패턴',
+  '자기 효능감 저하, 성취 앞에서의 자기 방해',
+  '행동 시작에 대한 강한 내적 브레이크와 미루기',
+  '자신의 욕구를 뒤로 미루고 타인 우선 패턴',
+  '소속감 결핍, 집단 속 이방인 느낌',
+  '친밀감에 대한 경계, 깊은 관계 회피',
+  '아프거나 힘들어야 관심받는다는 무의식적 패턴',
+  '자신의 생각·판단에 대한 불신과 복종 경향',
+  '감정 억압, 타인 감정 우선, 자기 감정 무감각'
+];
+
+// 각 금지명령별 허가 문장 3개
+const injPermissions = [
+  [],
+  // 1. 존재하지 말라
+  [
+    '나는 여기 있어도 괜찮다',
+    '나의 존재 자체가 이미 충분하다',
+    '나는 무언가를 증명하지 않아도 사랑받을 수 있다',
+  ],
+  // 2. 너 자신이 되지 말라
+  [
+    '나는 있는 그대로의 나로 괜찮다',
+    '나다운 모습을 드러내도 안전하다',
+    '나는 나 자신이어도 받아들여진다',
+  ],
+  // 3. 아이가 되지 말라
+  [
+    '나는 도움을 받아도 괜찮다',
+    '나는 쉬고 즐겨도 괜찮다',
+    '나는 다른 사람에게 기대어도 괜찮다',
+  ],
+  // 4. 성장하지 말라
+  [
+    '나는 내 삶을 스스로 선택할 수 있다',
+    '나는 독립적으로 살아가도 괜찮다',
+    '나는 혼자서도 잘 해낼 수 있다',
+  ],
+  // 5. 성공하지 말라
+  [
+    '나는 잘 해내도 괜찮다',
+    '나의 성공은 누군가를 위협하지 않는다',
+    '나는 노력한 만큼 인정받아도 괜찮다',
+  ],
+  // 6. 실행하지 말라
+  [
+    '나는 시도해도 괜찮다',
+    '실수는 배움의 일부이고, 나는 도전해도 안전하다',
+    '나는 내 판단을 믿고 행동해도 괜찮다',
+  ],
+  // 7. 중요해지지 말라
+  [
+    '나의 욕구는 중요하다',
+    '나는 내 필요를 표현해도 괜찮다',
+    '나는 중요한 역할을 맡아도 괜찮다',
+  ],
+  // 8. 소속되지 말라
+  [
+    '나는 어딘가에 속해도 괜찮다',
+    '나는 사람들과 어울려도 안전하다',
+    '나는 집단의 일원이 되어도 나를 잃지 않는다',
+  ],
+  // 9. 친밀해지지 말라
+  [
+    '나는 마음을 열어도 괜찮다',
+    '가까워지는 것은 안전할 수 있다',
+    '나는 사랑받고 사랑해도 괜찮다',
+  ],
+  // 10. 건강하지 말라
+  [
+    '나는 건강해도 관심을 받을 수 있다',
+    '괜찮아지는 것은 안전하다',
+    '나는 아프지 않아도 충분히 돌봄을 받을 자격이 있다',
+  ],
+  // 11. 생각하지 말라
+  [
+    '나의 생각은 가치 있다',
+    '나는 내 판단을 믿어도 괜찮다',
+    '나는 내 의견을 표현해도 안전하다',
+  ],
+  // 12. 느끼지 말라
+  [
+    '나는 감정을 느껴도 괜찮다',
+    '내 감정은 중요하고 표현해도 안전하다',
+    '나는 슬퍼하고 화내고 기뻐해도 괜찮다',
+  ],
+];
+
+// 각 금지명령별 복합결정 문장 — 금지명령을 감추기 위해 강화해온 드라이버 문장
+const injCompound = [
+  '',
+  '완벽하게 해내는 한, 나는 존재해도 돼.',
+  '다른 사람이 원하는 모습으로 있는 한, 나는 인정받을 수 있어.',
+  '혼자서 다 해내는 한, 나는 짐이 되지 않을 수 있어.',
+  '곁을 지키는 한, 나는 버림받지 않을 수 있어.',
+  '적당히만 해내는 한, 나는 안전할 수 있어.',
+  '신중하게 계속 미루는 한, 나는 실패하지 않을 수 있어.',
+  '내 욕구를 뒤로 미루는 한, 나는 자리를 지킬 수 있어.',
+  '혼자 버티는 한, 나는 상처받지 않을 수 있어.',
+  '거리를 두는 한, 나는 실망하지 않을 수 있어.',
+  '아프거나 힘들어야, 나는 돌봄을 받을 수 있어.',
+  '내 생각을 접어두는 한, 나는 갈등을 피할 수 있어.',
+  '감정을 누르는 한, 나는 무너지지 않을 수 있어.',
+];
+
+function renderPermissionSuggestions() {
+  const box = document.getElementById('perm-chip-box');
+  if (!box) return;
+
+  // 점수 순 정렬, 점수 없으면 전체 순서대로
+  const ranked = [];
+  for (let i = 1; i <= 12; i++) ranked.push({ idx: i, score: scores[i] });
+  ranked.sort((a, b) => b.score - a.score);
+
+  // 각 금지명령에서 허가 문장 순서대로 모아서 하나의 칩 목록 생성
+  const chips = [];
+  ranked.forEach(item => {
+    injPermissions[item.idx].forEach(text => chips.push(text));
+  });
+
+  box.innerHTML = chips.map(text =>
+    `<span class="perm-chip" onclick="addPermissionText(this, '${text.replace(/'/g, "\\'")}')">${text}</span>`
+  ).join('');
+}
+
+let scores = new Array(13).fill(0);
+let permCount = 0;
+
+function startAssessment() {
+  document.getElementById('cover').style.display = 'none';
+  document.getElementById('progress-wrap').style.display = 'flex';
+  showPage(1);
+  updateProgress(1);
+}
+
+function showPage(n) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const id = (n === 'result') ? 'page-result' : 'page-' + n;
+  const target = document.getElementById(id);
+  if (target) target.classList.add('active');
+  window.scrollTo(0, 0);
+  // 허가 문장 페이지 진입 시 예시 렌더링
+  if (n === 4) renderPermissionSuggestions();
+}
+
+function addPermissionText(chipEl, text) {
+  // 이미 사용된 칩이면 무시
+  if (chipEl.classList.contains('used')) return;
+  for (let i = 1; i <= 4; i++) {
+    const inp = document.getElementById('perm' + i);
+    if (inp && !inp.value) {
+      inp.value = text;
+      chipEl.classList.add('used');
+      chipEl.textContent = '✓ ' + text;
+      return;
+    }
+  }
+}
+
+function updateProgress(step) {
+  const labels = ['경험 탐색 1~6', '경험 탐색 7~12', '몸이 보내는 신호', '허가 문장'];
+  const pct = [25, 50, 75, 100];
+  const fill = document.getElementById('progress-fill');
+  const label = document.getElementById('progress-label');
+  const stepLabel = document.getElementById('progress-step-label');
+  if (!fill || step < 1 || step > 4) return;
+  label.textContent = step + ' / 5';
+  fill.style.width = pct[step - 1] + '%';
+  stepLabel.textContent = labels[step - 1];
+}
+
+function collectScores() {
+  scores = new Array(13).fill(0);
+  document.querySelectorAll('.q-scale').forEach(scale => {
+    const inj = parseInt(scale.dataset.inj);
+    const checked = scale.querySelector('input[type=radio]:checked');
+    if (checked) scores[inj] += parseInt(checked.value);
+  });
+  for (let i = 1; i <= 12; i++) {
+    const badge = document.getElementById('badge-' + i);
+    if (badge) badge.textContent = scores[i] + ' / 25점';
+  }
+  updateScoreSummary();
+}
+
+function updateScoreSummary() {
+  const maxScore = Math.max(...scores.slice(1));
+  let total = 0;
+  for (let i = 1; i <= 12; i++) {
+    total += scores[i];
+    const scoreEl = document.getElementById('sss-' + i);
+    const barEl   = document.getElementById('ssb-' + i);
+    const rowEl   = document.getElementById('ss-' + i);
+    if (!scoreEl) continue;
+    scoreEl.textContent = scores[i];
+    barEl.style.width = (scores[i] / 25 * 100) + '%';
+    // 최고점 강조
+    if (scores[i] > 0 && scores[i] === maxScore) {
+      rowEl.classList.add('ss-top');
+      scoreEl.textContent = scores[i] + ' ★';
+    } else {
+      rowEl.classList.remove('ss-top');
+    }
+  }
+  const totalEl = document.getElementById('ss-total');
+  if (totalEl) totalEl.textContent = total;
+}
+
+function validatePage(pageNum) {
+  const page = document.getElementById('page-' + pageNum);
+  if (!page) return true;
+  const scales = page.querySelectorAll('.q-scale');
+  let allAnswered = true;
+  scales.forEach(scale => {
+    if (!scale.querySelector('input[type=radio]:checked')) allAnswered = false;
+  });
+  return allAnswered;
+}
+
+function goNext(fromPage) {
+  collectScores();
+  // 유효성 검사 (라디오 문항 있는 페이지만)
+  if (fromPage === 1 || fromPage === 2) {
+    if (!validatePage(fromPage)) {
+      const warn = document.getElementById('warn-' + fromPage);
+      if (warn) warn.style.display = 'block';
+      return;
+    }
+    const warn = document.getElementById('warn-' + fromPage);
+    if (warn) warn.style.display = 'none';
+  }
+  const next = fromPage + 1;
+  showPage(next);
+  updateProgress(Math.min(next, 4));
+}
+
+function goPrev(fromPage) {
+  const prev = fromPage - 1;
+  showPage(prev);
+  updateProgress(Math.max(prev, 1));
+}
+
+function showResult() {
+  collectScores();
+  buildResult();
+  showPage('result');
+  const fill = document.getElementById('progress-fill');
+  const label = document.getElementById('progress-label');
+  const stepLabel = document.getElementById('progress-step-label');
+  if (fill) fill.style.width = '100%';
+  if (label) label.textContent = '완료';
+  if (stepLabel) stepLabel.textContent = '결과 확인';
+}
+
+function buildResult() {
+  // Sort scores
+  const ranked = [];
+  for (let i = 1; i <= 12; i++) ranked.push({ idx: i, score: scores[i] });
+  ranked.sort((a, b) => b.score - a.score);
+
+  // Summary top 3
+  const summaryEl = document.getElementById('summary-top-items');
+  summaryEl.innerHTML = '';
+  for (let r = 0; r < 3; r++) {
+    const item = ranked[r];
+    summaryEl.innerHTML += `
+      <div class="summary-top-item">
+        <div class="summary-rank-badge">${r+1}</div>
+        <div style="flex:1;">
+          <div class="summary-name">${injNames[item.idx]}</div>
+          <div class="summary-meaning">${injMeaning[item.idx]}</div>
+          ${item.score > 0 ? `
+          <div class="compound-box">
+            <div class="compound-label">이 명령을 덮어온 문장 (복합결정)</div>
+            “${injCompound[item.idx]}”
+          </div>` : ''}
+        </div>
+        <div style="text-align:right;">
+          <div class="summary-score">${item.score}</div>
+          <div class="summary-max">/ 25</div>
+        </div>
+      </div>`;
+  }
+
+  // 몸이 보내는 신호 — 체크된 항목 정리
+  const signalEl = document.getElementById('signal-result-list');
+  if (signalEl) {
+    const checked = Array.from(document.querySelectorAll('.signal-check:checked')).map(c => c.value);
+    if (checked.length > 0) {
+      signalEl.innerHTML = checked.map(v => `<span class="signal-result-chip">${v}</span>`).join('');
+    } else {
+      signalEl.innerHTML = '<div style="color:var(--ink-muted);font-size:13px;padding:6px 0;">체크된 신호가 없습니다.</div>';
+    }
+  }
+
+  // Full grid
+  const gridEl = document.getElementById('result-grid');
+  gridEl.innerHTML = '';
+  ranked.forEach((item, idx) => {
+    const pct = Math.round((item.score / 25) * 100);
+    const isTop = idx < 3;
+    gridEl.innerHTML += `
+      <div class="result-item ${isTop ? 'highlight' : ''}">
+        <div class="result-rank">${idx+1}</div>
+        <div>
+          <div class="result-name">${injNames[item.idx]}</div>
+        </div>
+        <div class="result-bar-wrap"><div class="result-bar-fill" style="width:${pct}%"></div></div>
+        <div class="result-score">${item.score}</div>
+      </div>`;
+  });
+
+  // Permissions
+  const permEl = document.getElementById('perm-result-list');
+  permEl.innerHTML = '';
+  for (let i = 1; i <= 4; i++) {
+    const val = (document.getElementById('perm' + i)||{}).value;
+    if (val && val.trim()) {
+      permEl.innerHTML += `<div class="perm-result-item">${val}</div>`;
+    }
+  }
+  if (!permEl.innerHTML) {
+    permEl.innerHTML = '<div style="color:var(--ink-muted);font-size:13px;padding:10px 0;">작성된 허가 문장이 없습니다.</div>';
+  }
+}
+
+function restart() {
+  document.querySelectorAll('input[type=radio]').forEach(r => r.checked = false);
+  document.querySelectorAll('input[type=checkbox]').forEach(c => c.checked = false);
+  document.querySelectorAll('textarea, input[type=text]').forEach(t => t.value = '');
+  for (let i = 1; i <= 12; i++) {
+    const badge = document.getElementById('badge-' + i);
+    if (badge) badge.textContent = '0 / 25점';
+  }
+  scores = new Array(13).fill(0);
+  document.getElementById('cover').style.display = 'flex';
+  document.getElementById('progress-wrap').style.display = 'none';
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  window.scrollTo(0, 0);
+}
+
+// Live score update on radio change
+document.addEventListener('change', function(e) {
+  if (e.target.type === 'radio') {
+    collectScores();
+  }
+});
+</script>
+</body>
+</html>
